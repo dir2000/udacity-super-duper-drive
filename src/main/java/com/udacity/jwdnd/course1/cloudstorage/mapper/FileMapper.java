@@ -11,7 +11,7 @@ import java.util.List;
 
 @Mapper
 public interface FileMapper {
-    @Select("SELECT * FROM FILES WHERE userId = #{userId}")
+    @Select("SELECT fileid, filename FROM FILES WHERE userId = #{userId}")
     List<File> getUserFiles(Integer userId);
 
     @Insert("INSERT INTO FILES (filename, contenttype, filesize, userid, filedata) VALUES(#{fileName}, #{contentType}, #{fileSize}), #{userId}, #{fileData}")

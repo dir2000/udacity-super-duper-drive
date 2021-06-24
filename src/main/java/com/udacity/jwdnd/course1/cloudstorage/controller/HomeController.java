@@ -19,37 +19,30 @@ public class HomeController {
     private UserService userService;
     private FileService fileService;
 
-    public HomeController(FileService fileService) {
-         this.fileService = fileService;
+    public HomeController(UserService userService, FileService fileService) {
+        this.userService = userService;
+        this.fileService = fileService;
     }
 
     @GetMapping("/home")
-    public String getHomePage(//MessageForm messageForm, Model model
-                               ) {
+    public String getHomePage(Model model, Principal principal) {
         //model.addAttribute("messages", this.messageListService.getMessages());
+        populateModel(model, principal);
         return "home";
     }
 
     @PostMapping("/file-upload")
     public String uploadFile(@RequestParam MultipartFile fileUpload, Model model, Principal principal) throws IOException {
-        int userId = userService.getUser(principal.getName()).getUserId();
+        int userId = userService.getUserId(principal);
         File file = new File(null, fileUpload.getOriginalFilename(), fileUpload.getContentType(),
                 String.valueOf(fileUpload.getSize()), userId, fileUpload.getBytes());
         fileService.addFile(file);
-        populateModel(model, userId);
+        populateModel(model, principal);
         return "home";
     }
 
-    private void populateModel(Model model, int userId) {
+    private void populateModel(Model model, Principal principal) {
+        int userId = userService.getUserId(principal);
         model.addAttribute("files", fileService.getUserFiles(userId));
     }
-
-//    @PostMapping()
-//    public String addMessage(MessageForm messageForm, Model model, Principal principal) {
-//        messageListService.addMessage(new Message(null, principal.getName(), messageForm.getText()));
-//        model.addAttribute("messages", messageListService.getMessages());
-//        messageForm.setText("");
-//        return "chat";
-//    }
-
 }

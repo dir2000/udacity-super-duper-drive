@@ -27,4 +27,11 @@ public class FileService {
     public List<File> getUserFiles(Integer userId) {
         return fileMapper.getUserFiles(userId);
     }
+
+    public File getFile(Integer fileId, Integer userId) {
+        return fileMapper.getFile(fileId, userId);
+    }
+    public void delete(Integer fileId, Integer userId) {
+        fileMapper.delete(fileId, userId);
+    }
 }

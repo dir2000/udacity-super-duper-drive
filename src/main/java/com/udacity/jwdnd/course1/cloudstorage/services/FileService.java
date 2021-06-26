@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class FileService {
@@ -28,10 +27,15 @@ public class FileService {
         return fileMapper.getUserFiles(userId);
     }
 
-    public File getFile(Integer fileId, Integer userId) {
-        return fileMapper.getFile(fileId, userId);
+    public File getFile(Integer fileId) {
+        return fileMapper.getFile(fileId);
     }
-    public void delete(Integer fileId, Integer userId) {
-        fileMapper.delete(fileId, userId);
+
+    public void delete(Integer fileId) {
+        fileMapper.delete(fileId);
+    }
+
+    public boolean fileExists(String fileName, Integer userId) {
+        return fileMapper.getFileByName(fileName, userId) != null;
     }
 }

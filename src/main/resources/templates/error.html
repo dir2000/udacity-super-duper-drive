@@ -12,8 +12,8 @@
 <div class="container justify-content-center w-50 p-3" style="margin-top: 5em;">
     <div>
         <h1>Something went wrong! </h1>
-        <h2 th:unless="${customErrorMessage}">Our Engineers are on it</h2>
-        <h2 th:if="${customErrorMessage}" th:text="${customErrorMessage}">Error message</h2>
+        <h2 th:unless="${errorMessage}">Our Engineers are on it</h2>
+        <h2 th:if="${errorMessage}" th:text="${errorMessage}">Error message</h2>
         <span>Click <a th:href="@{/home}">here</a> to go back to Home.</span>
     </div>
 </div>

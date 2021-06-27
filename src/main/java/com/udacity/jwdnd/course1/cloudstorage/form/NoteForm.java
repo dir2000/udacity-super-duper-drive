@@ -1,16 +1,16 @@
 package com.udacity.jwdnd.course1.cloudstorage.form;
 
 public class NoteForm {
-    private Integer noteId;
+    private Integer noteid;
     private String noteTitle;
     private String noteDescription;
 
-    public Integer getNoteId() {
-        return noteId;
+    public Integer getNoteid() {
+        return noteid;
     }
 
-    public void setNoteId(Integer noteId) {
-        this.noteId = noteId;
+    public void setNoteid(Integer noteid) {
+        this.noteid = noteid;
     }
 
     public String getNoteTitle() {

@@ -11,7 +11,7 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
             <div id="logoutDiv">
-                <form action="#" th:href="@{/logout}" method="POST">
+                <form action="#" th:action="@{/logout}" method="POST">
                     <button type="submit" class="btn btn-secondary float-right">Logout</button>
                 </form>
             </div>
@@ -75,14 +75,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <button type="button" class="btn btn-success">Edit</button>
-                                            <a class="btn btn-danger">Delete</a>
-                                        </td>
-                                        <th scope="row">Example Note Title</th>
-                                        <td>Example Note Description </td>
-                                    </tr>
+                                <tr th:each="note : ${notes}">
+                                    <td>
+                                        <button type="button" class="btn btn-success" id="editNoteButton"
+                                                th:onclick="javascript:showNoteModal([[${note.noteid}]],[[${note.noteTitle}]],[[${note.noteDescription}]])">
+                                            Edit
+                                        </button>
+                                        <a class="btn btn-danger" id="deleteNoteLink"
+                                           th:href="@{'/notes/delete/' + ${note.noteid}}">Delete</a> NoteLink
+                                    </td>
+                                    <th id="note-title-on-list" scope="row" th:text="${note.noteTitle}">Example Note Title</th>
+                                    <td id="note-description-on-list" th:text="${note.noteDescription}">Example Note
+                                        Description
+                                    </td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -97,8 +103,8 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form th:object="${noteForm}" th:action="@{'/notes/add'}" action="#" method="POST">
-                                            <input type="hidden" name="noteId" id="note-id">
+                                        <form th:object="${noteForm}" th:action="@{'/notes/edit'}" action="#" method="POST">
+                                            <input th:field="*{noteid}" type="hidden" name="noteid" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
                                                 <input th:field="*{noteTitle}" type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" required>
@@ -193,8 +199,8 @@
         <!--For opening the note modal-->
         <script type="text/javascript">
             // For opening the note modal
-            function showNoteModal(noteId, noteTitle, noteDescription) {
-                $('#note-id').val(noteId ? noteId : '');
+            function showNoteModal(noteid, noteTitle, noteDescription) {
+                $('#note-id').val(noteid ? noteid : '');
                 $('#note-title').val(noteTitle ? noteTitle : '');
                 $('#note-description').val(noteDescription ? noteDescription : '');
                 $('#noteModal').modal('show');

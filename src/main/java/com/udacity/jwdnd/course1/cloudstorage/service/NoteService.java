@@ -1,14 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage.service;
 
 import com.udacity.jwdnd.course1.cloudstorage.form.NoteForm;
-import com.udacity.jwdnd.course1.cloudstorage.mapper.FileMapper;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.NoteMapper;
-import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -28,11 +24,11 @@ public class NoteService {
         return noteMapper.getNotes(userId);
     }
 
-    public Note getNote(Integer noteId) {
-        return noteMapper.getNote(noteId);
+    public void delete(Integer noteid) {
+        noteMapper.delete(noteid);
     }
 
-    public void delete(Integer noteId) {
-        noteMapper.delete(noteId);
+    public void update(NoteForm noteForm) {
+        noteMapper.update(noteForm);
     }
 }

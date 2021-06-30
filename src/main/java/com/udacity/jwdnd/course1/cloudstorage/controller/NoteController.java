@@ -14,7 +14,6 @@ import java.security.Principal;
 public class NoteController {
     private UserService userService;
     private NoteService noteService;
-    private ErrorService errorService;
 
     public NoteController(UserService userService, NoteService noteService) {
         this.userService = userService;

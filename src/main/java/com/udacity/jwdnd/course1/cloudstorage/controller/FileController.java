@@ -1,7 +1,6 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
-import com.udacity.jwdnd.course1.cloudstorage.service.ErrorService;
 import com.udacity.jwdnd.course1.cloudstorage.service.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.core.io.ByteArrayResource;
@@ -22,7 +21,6 @@ import java.security.Principal;
 public class FileController {
     private UserService userService;
     private FileService fileService;
-    private ErrorService errorService;
 
     public FileController(UserService userService, FileService fileService) {
         this.userService = userService;

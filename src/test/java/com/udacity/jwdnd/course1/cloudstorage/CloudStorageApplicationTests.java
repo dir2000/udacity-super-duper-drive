@@ -4,10 +4,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+
+import static com.udacity.jwdnd.course1.cloudstorage.TestHelper.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CloudStorageApplicationTests {
@@ -36,21 +38,48 @@ class CloudStorageApplicationTests {
 
 	@Test
 	public void whenGetLoginPageShouldGetIt() {
-		driver.get("http://localhost:" + this.port + "/login");
+		driver.get(loginURL(port));
 		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
 	@Test
-	public void whenTryToRegisterUserWithExistingNameShouldGetError() {
-		SignupPage signupPage = new SignupPage(driver, port);
-		String username = "username";
-		signupPage.signUp("Michail", "Zhurylo", username, "password");
+	public void whenGetSignUpPageShouldGetIt() {
+		driver.get(signupURL(port));
+		Assertions.assertEquals("Sign Up", driver.getTitle());
 	}
-	
-	private void waitForLoading(By by) {
-		int timeOutInSeconds = 10;
-		WebDriverWait wait = new WebDriverWait(driver, timeOutInSeconds);
-		wait.until(webDriver -> webDriver.findElement(by));
+	@Test
+
+	public void whenGetHomePageShouldNotGetIt() {
+		driver.get(homeURL(port));
+		Assertions.assertEquals("Login", driver.getTitle());
 	}
 
+	@Test
+	public void fullUserRelatedTest() {
+		HomePage homePage = getHomePage();
+		Assertions.assertEquals("Home", driver.getTitle());
+		homePage.logout();
+		driver.get(homeURL(port));
+		Assertions.assertEquals("Login", driver.getTitle());
+	}
+
+	@Test
+	public void whenCreateNoteShouldDisplayIt() {
+		HomePage homePage = getHomePage();
+		String noteTitle = "Some note title";
+		String noteDescription = "Some note description";
+		homePage.addNote(noteTitle, noteDescription);
+		WebElement elenemtNoteTitle = driver.findElement(By.id("note-title-on-list"));
+		Assertions.assertEquals(noteTitle, elenemtNoteTitle.getText());
+		homePage.logout();
+	}
+
+	private HomePage getHomePage(){
+		SignupPage signupPage = new SignupPage(driver, port);
+		String username = getUsername();
+		signupPage.signUp(FIRST_NAME, LAST_NAME, username, PASSWORD);
+		LoginPage loginPage = new LoginPage(driver, port);
+		loginPage.signIn(username, PASSWORD);
+		return new HomePage(driver, port);
+	}
 }

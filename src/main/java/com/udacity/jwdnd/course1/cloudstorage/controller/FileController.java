@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -28,14 +29,18 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam MultipartFile fileUpload, Principal principal, RedirectAttributes redirectAttributes) throws IOException {
+    public String uploadFile(@RequestParam MultipartFile fileUpload, Principal principal, Model model) throws IOException {
         Integer userId = userService.getUserId(principal);
-        if (fileService.fileExists(fileUpload.getOriginalFilename(), userId)) {
-            redirectAttributes.addFlashAttribute("errorMessage", "File with such name already exists.");
-            return "redirect:/error";
+        if ("".equals(fileUpload.getOriginalFilename())) {
+            model.addAttribute("errorMessage", "You should select a file.");
+            return "result";
+        } else if (fileService.fileExists(fileUpload.getOriginalFilename(), userId)) {
+            model.addAttribute("errorMessage", "File with such name already exists.");
+            return "result";
         }
-        fileService.addFile(fileUpload, userId);
-        return "redirect:/home";
+        Integer rowCountAffected = fileService.addFile(fileUpload, userId);
+        addChangesInfoToModel(rowCountAffected, model);
+        return "result";
     }
 
     @GetMapping("/download/{fileId}")
@@ -53,8 +58,17 @@ public class FileController {
     }
 
     @GetMapping("/delete/{fileId}")
-    public String deleteFile(@PathVariable(value = "fileId") Integer fileId) {
-        fileService.delete(fileId);
-        return "redirect:/home";
+    public String deleteFile(@PathVariable(value = "fileId") Integer fileId, Model model) {
+        Integer rowCountAffected = fileService.delete(fileId);
+        addChangesInfoToModel(rowCountAffected, model);
+        return "result";
+    }
+
+    private void addChangesInfoToModel(Integer rowCountAffected, Model model) {
+        if (rowCountAffected == 0) {
+            model.addAttribute("changesNotSaved", true);
+        } else {
+            model.addAttribute("changesSaved", true);
+        };
     }
 }

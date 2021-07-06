@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.form.CredentialForm;
 import com.udacity.jwdnd.course1.cloudstorage.service.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,19 +24,30 @@ public class CredentialController {
     }
 
     @PostMapping("/edit")
-    public String editCredential(CredentialForm credentialForm, Principal principal) {
+    public String editCredential(CredentialForm credentialForm, Principal principal, Model model) {
         Integer userId = userService.getUserId(principal);
+        Integer rowCountAffected = 0;
         if (credentialForm.getCredentialId() == null) {
-            credentialService.addCredential(credentialForm, userId);
+            rowCountAffected = credentialService.addCredential(credentialForm, userId);
         } else {
-            credentialService.update(credentialForm);
+            rowCountAffected = credentialService.update(credentialForm);
         }
-        return "redirect:/home";
+        addChangesInfoToModel(rowCountAffected, model);
+        return "result";
     }
 
     @GetMapping("/delete/{credentialid}")
-    public String deleteCredential(@PathVariable(value = "credentialid") Integer credentialid) {
-        credentialService.delete(credentialid);
-        return "redirect:/home";
+    public String deleteCredential(@PathVariable(value = "credentialid") Integer credentialid, Model model) {
+        Integer rowCountAffected = credentialService.delete(credentialid);
+        addChangesInfoToModel(rowCountAffected, model);
+        return "result";
+    }
+
+    private void addChangesInfoToModel(Integer rowCountAffected, Model model) {
+        if (rowCountAffected == 0) {
+            model.addAttribute("changesNotSaved", true);
+        } else {
+            model.addAttribute("changesSaved", true);
+        };
     }
 }

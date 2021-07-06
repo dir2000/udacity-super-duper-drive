@@ -15,20 +15,20 @@ public class NoteService {
         this.noteMapper = noteMapper;
     }
 
-    public void addNote(NoteForm noteForm, Integer userId) {
+    public Integer addNote(NoteForm noteForm, Integer userId) {
         Note note = new Note(null, noteForm.getNoteTitle(), noteForm.getNoteDescription(), userId);
-        noteMapper.insert(note);
+        return noteMapper.insert(note);
     }
 
     public List<Note> getNotes(Integer userId) {
         return noteMapper.getNotes(userId);
     }
 
-    public void delete(Integer noteid) {
-        noteMapper.delete(noteid);
+    public Integer delete(Integer noteid) {
+        return noteMapper.delete(noteid);
     }
 
-    public void update(NoteForm noteForm) {
-        noteMapper.update(noteForm);
+    public Integer update(NoteForm noteForm) {
+        return noteMapper.update(noteForm);
     }
 }

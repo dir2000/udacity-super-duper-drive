@@ -21,7 +21,7 @@ public class CredentialService {
         this.encryptionService = encryptionService;
     }
 
-    public void addCredential(CredentialForm credentialForm, Integer userId) {
+    public Integer addCredential(CredentialForm credentialForm, Integer userId) {
         SecureRandom random = new SecureRandom();
         byte[] byteKey = new byte[16];
         random.nextBytes(byteKey);
@@ -29,7 +29,7 @@ public class CredentialService {
         String encryptedPassword = encryptionService.encryptValue(credentialForm.getPassword(), key);
         Credential credential = new Credential(null, credentialForm.getUrl(), credentialForm.getUserName(),
                 key, encryptedPassword, userId);
-        credentialMapper.insert(credential);
+        return credentialMapper.insert(credential);
     }
 
     public List<Map<String, String>> getCredentials(Integer userId) {
@@ -48,14 +48,14 @@ public class CredentialService {
         return result;
     }
 
-    public void delete(Integer credentialId) {
-        credentialMapper.delete(credentialId);
+    public Integer delete(Integer credentialId) {
+        return credentialMapper.delete(credentialId);
     }
 
-    public void update(CredentialForm credentialForm) {
+    public Integer update(CredentialForm credentialForm) {
         Credential old = credentialMapper.getCredential(credentialForm.getCredentialId());
         String encryptedPassword = encryptionService.encryptValue(credentialForm.getPassword(), old.getKey());
         credentialForm.setPassword(encryptedPassword);
-        credentialMapper.update(credentialForm);
+        return credentialMapper.update(credentialForm);
     }
 }

@@ -17,10 +17,10 @@ public class FileService {
         this.fileMapper = fileMapper;
     }
 
-    public void addFile(MultipartFile fileUpload, Integer userId) throws IOException {
+    public Integer addFile(MultipartFile fileUpload, Integer userId) throws IOException {
         File file = new File(null, fileUpload.getOriginalFilename(), fileUpload.getContentType(),
                 String.valueOf(fileUpload.getSize()), userId, fileUpload.getBytes());
-        fileMapper.insert(file);
+        return fileMapper.insert(file);
     }
 
     public List<File> getFiles(Integer userId) {
@@ -31,8 +31,8 @@ public class FileService {
         return fileMapper.getFile(fileId);
     }
 
-    public void delete(Integer fileId) {
-        fileMapper.delete(fileId);
+    public Integer delete(Integer fileId) {
+        return fileMapper.delete(fileId);
     }
 
     public boolean fileExists(String fileName, Integer userId) {

@@ -4,6 +4,7 @@ import com.udacity.jwdnd.course1.cloudstorage.form.NoteForm;
 import com.udacity.jwdnd.course1.cloudstorage.service.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.service.UserService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -20,19 +21,30 @@ public class NoteController {
     }
 
     @PostMapping("/edit")
-    public String editNote(NoteForm noteForm, Principal principal) {
+    public String editNote(NoteForm noteForm, Principal principal, Model model) {
         Integer userId = userService.getUserId(principal);
+        Integer rowCountAffected = 0;
         if (noteForm.getNoteid() == null) {
-            noteService.addNote(noteForm, userId);
+            rowCountAffected = noteService.addNote(noteForm, userId);
         } else {
-            noteService.update(noteForm);
+            rowCountAffected = noteService.update(noteForm);
         }
-        return "redirect:/home";
+        addChangesInfoToModel(rowCountAffected, model);
+        return "result";
     }
 
     @GetMapping("/delete/{noteid}")
-    public String deleteNote(@PathVariable(value = "noteid") Integer noteid) {
-        noteService.delete(noteid);
-        return "redirect:/home";
+    public String deleteNote(@PathVariable(value = "noteid") Integer noteid, Model model) {
+        Integer rowCountAffected = noteService.delete(noteid);
+        addChangesInfoToModel(rowCountAffected, model);
+        return "result";
+    }
+
+    private void addChangesInfoToModel(Integer rowCountAffected, Model model) {
+        if (rowCountAffected == 0) {
+            model.addAttribute("changesNotSaved", true);
+        } else {
+            model.addAttribute("changesSaved", true);
+        };
     }
 }

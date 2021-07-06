@@ -186,8 +186,12 @@ class CloudStorageApplicationTests {
         String url = "www.somesite.com";
         String username = "Some username";
         String password = "Some password";
+        String url2 = "www.somesite2.com";
+        String username2 = "Some username2";
+        String password2 = "Some password2";
+
         homePage.addCredential(url, username, password);
-        homePage.addCredential(url, username, password);
+        homePage.addCredential(url2, username2, password2);
         homePage.deleteFirstCredential();
         homePage.deleteFirstCredential();
         Assertions.assertThrows(NoSuchElementException.class, () -> {

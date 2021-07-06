@@ -27,6 +27,10 @@ public class CredentialController {
     public String editCredential(CredentialForm credentialForm, Principal principal, Model model) {
         Integer userId = userService.getUserId(principal);
         Integer rowCountAffected = 0;
+        if (credentialService.checkIfCrenentialExists(credentialForm, userId)) {
+            model.addAttribute("errorMessage", "User already available");
+            return "result";
+        };
         if (credentialForm.getCredentialId() == null) {
             rowCountAffected = credentialService.addCredential(credentialForm, userId);
         } else {

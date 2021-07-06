@@ -21,6 +21,12 @@ public class CredentialService {
         this.encryptionService = encryptionService;
     }
 
+    public boolean checkIfCrenentialExists(CredentialForm credentialForm, Integer userId) {
+        Credential credential = credentialMapper.getCredentialForSiteAndUser(userId, credentialForm.getUrl(),
+                credentialForm.getUserName());
+        return credential != null;
+    }
+
     public Integer addCredential(CredentialForm credentialForm, Integer userId) {
         SecureRandom random = new SecureRandom();
         byte[] byteKey = new byte[16];
@@ -35,7 +41,7 @@ public class CredentialService {
     public List<Map<String, String>> getCredentials(Integer userId) {
         List<Credential> credentials = credentialMapper.getCredentials(userId);
         List<Map<String, String>> result = new LinkedList<>();
-        for (Credential credential:credentials) {
+        for (Credential credential : credentials) {
             Map<String, String> map = new HashMap<>();
             map.put("credentialId", String.valueOf(credential.getCredentialId()));
             map.put("url", credential.getUrl());

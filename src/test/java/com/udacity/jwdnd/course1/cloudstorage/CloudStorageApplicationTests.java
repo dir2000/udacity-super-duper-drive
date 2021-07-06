@@ -117,15 +117,25 @@ class CloudStorageApplicationTests {
         String url = "www.somesite.com";
         String username = "Some username";
         String password = "Some password";
+        String url2 = "www.somesite2.com";
+        String username2 = "Some username2";
+        String password2 = "Some password2";
+
         homePage.addCredential(url, username, password);
-        homePage.addCredential(url, username, password);
+        homePage.addCredential(url2, username2, password2);
         List<WebElement> elementsURL = driver.findElements(By.name("credential-url"));
         Assertions.assertEquals(2, elementsURL.size());
-        elementsURL.forEach((element) -> {Assertions.assertEquals(url, element.getText());});
+        Assertions.assertEquals(url, elementsURL.get(0).getText());
+        Assertions.assertEquals(url2, elementsURL.get(1).getText());
+
         List<WebElement> elementstUsername = driver.findElements(By.name("credential-username"));
-        elementstUsername.forEach((element) -> {Assertions.assertEquals(username, element.getText());});
+        Assertions.assertEquals(username, elementstUsername.get(0).getText());
+        Assertions.assertEquals(username2, elementstUsername.get(1).getText());
+
         List<WebElement> elementsPassword = driver.findElements(By.name("credential-password"));
-        elementsPassword.forEach((element) -> {Assertions.assertNotEquals(password, element.getText());});
+        Assertions.assertNotEquals(password, elementsPassword.get(0).getText());
+        Assertions.assertNotEquals(password2, elementsPassword.get(1).getText());
+
         homePage.logout();
     }
 
@@ -135,28 +145,37 @@ class CloudStorageApplicationTests {
         String url = "www.somesite.com";
         String username = "Some username";
         String password = "Some password";
+        String url2 = "www.somesite2.com";
+        String username2 = "Some username2";
+        String password2 = "Some password2";
+
         homePage.addCredential(url, username, password);
-        homePage.addCredential(url, username, password);
-        String newURL = "www.somenewsite.com";
-        String newUsername = "Some new username";
-        String newPassword = "Some new password";
+        homePage.addCredential(url2, username2, password2);
+
+        String newURL = "www.somenewsite3.com";
+        String newUsername = "Some new username3";
+        String newPassword = "Some new password3";
+        String newURL2 = "www.somenewsite4.com";
+        String newUsername2 = "Some new username4";
+        String newPassword2 = "Some new password4";
+
         List<WebElement> editButtons = driver.findElements(By.name("editCredentialButton"));
         homePage.editCredential(editButtons.get(0), newURL, newUsername, newPassword);
         editButtons = driver.findElements(By.name("editCredentialButton"));
-        homePage.editCredential(editButtons.get(1), newURL, newUsername, newPassword);
+        homePage.editCredential(editButtons.get(1), newURL2, newUsername2, newPassword2);
 
         List<WebElement> elementsURL = driver.findElements(By.name("credential-url"));
-        elementsURL.forEach((element) -> {Assertions.assertEquals(newURL, element.getText());});
-        List<WebElement> elementstUsername = driver.findElements(By.name("credential-username"));
-        elementstUsername.forEach((element) -> {Assertions.assertEquals(newUsername, element.getText());});
-        List<WebElement> elementsPassword = driver.findElements(By.name("credential-password"));
-        elementsPassword.forEach((element) -> {Assertions.assertNotEquals(newPassword, element.getText());});
+        Assertions.assertEquals(2, elementsURL.size());
+        Assertions.assertEquals(newURL, elementsURL.get(0).getText());
+        Assertions.assertEquals(newURL2, elementsURL.get(1).getText());
 
-        WebDriverWait wait = new WebDriverWait(driver, 20);
-        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.name("editCredentialButton")))).click();
-        WebElement elementPassword = wait.until(ExpectedConditions.elementToBeClickable(By.id("credential-password")));
-        Assertions.assertEquals(newPassword, elementPassword.getAttribute("value"));
-        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("credentialDismiss")))).click();
+        List<WebElement> elementstUsername = driver.findElements(By.name("credential-username"));
+        Assertions.assertEquals(newUsername, elementstUsername.get(0).getText());
+        Assertions.assertEquals(newUsername2, elementstUsername.get(1).getText());
+
+        List<WebElement> elementsPassword = driver.findElements(By.name("credential-password"));
+        Assertions.assertNotEquals(newPassword, elementsPassword.get(0).getText());
+        Assertions.assertNotEquals(newPassword2, elementsPassword.get(1).getText());
 
         homePage.logout();
     }

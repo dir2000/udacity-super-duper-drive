@@ -16,7 +16,8 @@ public class ControllerAdvice {
             HttpServletResponse response) {
 
         ModelAndView modelAndView = new ModelAndView("error");
-        modelAndView.addObject("errorMessage", exc.getMessage());
+        long maxUploadSize = exc.getMaxUploadSize();
+        modelAndView.addObject("errorMessage", "Maximum upload size " + (maxUploadSize >= 0L ? "of " + maxUploadSize + " bytes " : "") + "exceeded");
         return modelAndView;
     }
 }
